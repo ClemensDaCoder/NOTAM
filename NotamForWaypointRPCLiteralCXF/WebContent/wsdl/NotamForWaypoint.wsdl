@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="NotamForWaypointService" targetNamespace="http://dke.jku.at/wsdl/NotamForWaypoint" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dke.jku.at/wsdl/NotamForWaypoint" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <message name="NotamForWaypointResponse">
+    <part name="notamValid" type="xsd:boolean">
+    </part>
+  </message>
+  <message name="NotamForWaypointRequest">
+    <part name="flightDepartureTime" type="xsd:dateTime">
+    </part>
+    <part name="waypointRelativeDuration" type="xsd:duration">
+    </part>
+    <part name="notamValidFrom" type="xsd:dateTime">
+    </part>
+    <part name="notamValidTo" type="xsd:dateTime">
+    </part>
+    <part name="notamApplyFrom" type="xsd:time">
+    </part>
+    <part name="notamApplyTo" type="xsd:time">
+    </part>
+  </message>
+  <portType name="NotamForWaypoint_PortType">
+    <operation name="notamValidForWaypoint">
+      <input message="tns:NotamForWaypointRequest">
+    </input>
+      <output message="tns:NotamForWaypointResponse">
+    </output>
+    </operation>
+  </portType>
+  <binding name="NotamForWaypoint_Binding" type="tns:NotamForWaypoint_PortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="notamValidForWaypoint">
+      <soap:operation soapAction="notamValidForWaypoint"/>
+      <input>
+        <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://dke.jku.at/wsdl/NotamForWaypoint"/>
+      </input>
+      <output>
+        <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://dke.jku.at/wsdl/NotamForWaypoint"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="Notam_For_Waypoint">
+<documentation>WSDL File for NotamForWaypointService</documentation>
+    <port name="NotamForWaypoint_Port" binding="tns:NotamForWaypoint_Binding">
+      <soap:address location="http://localhost:8080/NotamForWaypointRPCLiteralCXF/services/NotamForWaypoint_Port"/>
+    </port>
+  </service>
+</definitions>

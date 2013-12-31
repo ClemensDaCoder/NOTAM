@@ -1,0 +1,7 @@
+#Project configuration file
+#Sat Dec 21 11:46:54 CET 2013
+indexer.key=f7a07d87-971d-4950-a861-73d86efe26fe
+OntologyLanguage=ObjectLogic
+Storage=RAM.choose
+Security.LoginRequired=off
+FullTextIndex=on

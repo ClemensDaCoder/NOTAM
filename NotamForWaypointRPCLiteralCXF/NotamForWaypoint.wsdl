@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://dke.jku.at/wsdl/NotamForWaypoint" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="NotamForWaypointService" targetNamespace="http://dke.jku.at/wsdl/NotamForWaypoint">
+ 
+   <message name="NotamForWaypointRequest">
+      <part name="flightDepartureTime" type="xsd:dateTime"/>
+	  <part name="waypointRelativeDuration" type="xsd:duration"/>
+	  <part name="notamValidFrom" type="xsd:dateTime"/>
+	  <part name="notamValidTo" type="xsd:dateTime"/>
+	  <part name="notamApplyFrom" type="xsd:time"/>
+	  <part name="notamApplyTo" type="xsd:time"/>
+   </message>
+   <message name="NotamForWaypointResponse">
+      <part name="notamValid" type="xsd:boolean"/>
+   </message>
+
+   <portType name="NotamForWaypoint_PortType">
+      <operation name="notamValidForWaypoint">
+         <input message="tns:NotamForWaypointRequest"/>
+         <output message="tns:NotamForWaypointResponse"/>
+      </operation>
+   </portType>
+
+   <binding name="NotamForWaypoint_Binding" type="tns:NotamForWaypoint_PortType">
+   <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+   <operation name="notamValidForWaypoint">
+      <soap:operation soapAction="notamValidForWaypoint"/>
+      <input>
+         <soap:body  encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://dke.jku.at/wsdl/NotamForWaypoint" use="literal"/>
+      </input>
+      <output>
+         <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://dke.jku.at/wsdl/NotamForWaypoint" use="literal"/>
+      </output>
+   </operation>
+   </binding>
+
+   <service name="Notam_For_Waypoint">
+      <documentation>WSDL File for NotamForWaypointService</documentation>
+      <port binding="tns:NotamForWaypoint_Binding" name="NotamForWaypoint_Port">
+         <soap:address location="http://localhost:8080/NotamForWayPoint/services/NotamForWaypoint_Port"/>
+      </port>
+   </service>
+</definitions>

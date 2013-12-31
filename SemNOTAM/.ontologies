@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container
+    ontologyLanguage="org.neontoolkit.datamodel.project.ObjectLogicProjectFactory"
+    openAll="false" username="">
+    <ontology id="http://www.dke.jku.at/semnotam">
+        <property showImports="true"/>
+    </ontology>
+</container>

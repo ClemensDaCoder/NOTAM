@@ -38,14 +38,12 @@ public class NotamForWaypointPortTypeImpl implements NotamForWaypointPortType {
      * @see at.jku.dke.wsdl.notamforwaypoint.NotamForWaypointPortType#notamValidForWaypoint(javax.xml.datatype.XMLGregorianCalendar  flightDepartureTime ,)javax.xml.datatype.Duration  waypointRelativeDuration ,)javax.xml.datatype.XMLGregorianCalendar  notamValidFrom ,)javax.xml.datatype.XMLGregorianCalendar  notamValidTo ,)javax.xml.datatype.XMLGregorianCalendar  notamApplyFrom ,)javax.xml.datatype.XMLGregorianCalendar  notamApplyTo )*
      */
     public boolean notamValidForWaypoint(javax.xml.datatype.XMLGregorianCalendar flightDepartureTime,javax.xml.datatype.Duration waypointRelativeDuration,javax.xml.datatype.XMLGregorianCalendar notamValidFrom,javax.xml.datatype.XMLGregorianCalendar notamValidTo,javax.xml.datatype.XMLGregorianCalendar notamApplyFrom,javax.xml.datatype.XMLGregorianCalendar notamApplyTo) { 
-        LOG.info("Executing operation notamValidForWaypoint");
+        LOG.info(Messages.getString("NotamForWaypointPortTypeImpl.flightDeparture") + flightDepartureTime.toString()); //$NON-NLS-1$
         try {
-        	
         	flightDepartureTime.add(waypointRelativeDuration);
+        	LOG.info(Messages.getString("NotamForWaypointPortTypeImpl.analyze") + flightDepartureTime.toString()); //$NON-NLS-1$
         	
         	Calendar wayPointCalendar = convertToJavaCalendar(flightDepartureTime);
-//        	System.out.println(wayPointCalendar.getTime());
-
         	Calendar validFromCalendar = convertToJavaCalendar(notamValidFrom);
         	Calendar validToCalendar = convertToJavaCalendar(notamValidTo);
         	
@@ -58,15 +56,20 @@ public class NotamForWaypointPortTypeImpl implements NotamForWaypointPortType {
         			
         			//if modified applyFrom is earlier than validFrom of Notam, applyFrom is invalid, notam is not relevant for flight
         			if (applyFromCalendar.before(validFromCalendar)) {
+        				LOG.info(Messages.getString("NotamForWaypointPortTypeImpl.invalid")); //$NON-NLS-1$
         				return false;
         			}
         		}
         		
         		if (wayPointCalendar.after(applyFromCalendar) && wayPointCalendar.before(applyToCalendar)) {
+        			LOG.info(Messages.getString("NotamForWaypointPortTypeImpl.valid")); //$NON-NLS-1$
         			return true;
+        		} else {
+        			LOG.info(Messages.getString("NotamForWaypointPortTypeImpl.wrongApplyTime")); //$NON-NLS-1$
+        			return false;
         		}
-        		return false;
         	} else {
+        		LOG.info(Messages.getString("NotamForWaypointPortTypeImpl.invalid")); //$NON-NLS-1$
         		return false;
         	}
         } catch (java.lang.Exception ex) {

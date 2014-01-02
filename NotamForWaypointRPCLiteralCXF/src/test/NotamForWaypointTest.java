@@ -21,6 +21,11 @@ import at.jku.dke.wsdl.notamforwaypoint.NotamForWaypointPortTypeImpl;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 
+/**
+ * @author Michael Weichselbaumer
+ * @author Manuel Hochreiter
+ *
+ */
 @RunWith(JUnit4.class)
 public class NotamForWaypointTest {
 	

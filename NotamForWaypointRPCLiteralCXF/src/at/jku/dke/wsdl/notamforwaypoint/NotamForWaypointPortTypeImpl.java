@@ -39,12 +39,6 @@ public class NotamForWaypointPortTypeImpl implements NotamForWaypointPortType {
      */
     public boolean notamValidForWaypoint(javax.xml.datatype.XMLGregorianCalendar flightDepartureTime,javax.xml.datatype.Duration waypointRelativeDuration,javax.xml.datatype.XMLGregorianCalendar notamValidFrom,javax.xml.datatype.XMLGregorianCalendar notamValidTo,javax.xml.datatype.XMLGregorianCalendar notamApplyFrom,javax.xml.datatype.XMLGregorianCalendar notamApplyTo) { 
         LOG.info("Executing operation notamValidForWaypoint");
-//        System.out.println(flightDepartureTime);
-//        System.out.println(waypointRelativeDuration);
-//        System.out.println(notamValidFrom);
-//        System.out.println(notamValidTo);
-//        System.out.println(notamApplyFrom);
-//        System.out.println(notamApplyTo);
         try {
         	
         	flightDepartureTime.add(waypointRelativeDuration);
@@ -60,7 +54,12 @@ public class NotamForWaypointPortTypeImpl implements NotamForWaypointPortType {
         		Calendar applyToCalendar = convertApplyTimeToJavaCalendar(notamApplyTo, wayPointCalendar);
         		
         		if (applyToCalendar.before(applyFromCalendar)) {
-        			applyToCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        			applyFromCalendar.add(Calendar.DAY_OF_MONTH, -1);
+        			
+        			//if modified applyFrom is earlier than validFrom of Notam, applyFrom is invalid, notam is not relevant for flight
+        			if (applyFromCalendar.before(validFromCalendar)) {
+        				return false;
+        			}
         		}
         		
         		if (wayPointCalendar.after(applyFromCalendar) && wayPointCalendar.before(applyToCalendar)) {

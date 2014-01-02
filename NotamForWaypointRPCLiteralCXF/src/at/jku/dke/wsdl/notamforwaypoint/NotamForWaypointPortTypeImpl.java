@@ -9,11 +9,6 @@ package at.jku.dke.wsdl.notamforwaypoint;
 import java.util.Calendar;
 import java.util.logging.Logger;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 

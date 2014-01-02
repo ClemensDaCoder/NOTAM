@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------
 //
 //  ontology: <http://www.dke.jku.at/semnotam>
-//      date: 2013-12-31 16:41:20
+//      date: 2014-01-02 19:34:16
 //
 //  created with OntoStudio 3.2.0-B353
 // ---------------------------------------------------------------------
@@ -162,9 +162,12 @@ navGPS:Nav.
 
 // Properties -------------------------------------------
 
+SNOWTAM1[concernsAirport->A1].
+NavidUnservicable1[hasApplyTime->Apply10To11].
+A2[hasPoint->P11].
+FlightA1A2[hasCurrentLocation->P44].
 A1[hasPoint->P512].
 A1[name->"A1"].
-A2[hasPoint->P11].
 A2[name->"A2"].
 A3[hasPoint->P162].
 A3[name->"A3"].
@@ -210,7 +213,6 @@ Glider[wingspan->12].
 Jumbo[hasAircraftType->AirbusA380].
 NavidUnservicable1[concernsAirspace->AREA1].
 NavidUnservicable1[concernsNavequip->navGPS].
-NavidUnservicable1[hasApplyTime->Apply10To11].
 NavidUnservicable1[hasValidTime->ValidDecember2013].
 NavidUnservicable1[name->"NavidUnservicable1"].
 Notam1[concernsAirspace->AREA2].
@@ -280,18 +282,29 @@ navGPS[navAid->"GPS"].
 
 // Misc. Facts ------------------------------------------
 
-crosses(Point,Area).
+distance(Point,Point,_int).
+notamImportance(Notam,CurrentFlightPhase,Importance).
 _rulecategory(ruleRelevantForFlightFlightRoute,_path("Rules")).
 _rulecategory(ruleRelevantForFlightLandingTakeoff,_path("Rules")).
 _rulecategory(ruleRelevantForFlightRoute,_path("Rules")).
 _rulecategory(ruleRelevantForLanding,_path("Rules")).
 _rulecategory(ruleRelevantForTakeoff,_path("Rules")).
-notamImportance(Notam,CurrentFlightPhase,Importance).
+crosses(Point,Area).
 
 // Rules ------------------------------------------------
 
-@{ruleImportance} 
-notamImportance(?N, Taxi, High) :- ?N:SNOWTAM.
+@{ruleCalculateDistance} 
+distance(?P1,
+?P2,
+?D)
+:-
+?P1:Point[hasX->?X1,
+hasY->?Y1] AND
+?P2:Point[hasX->?X2,
+hasY->?Y2] AND
+?D is (sqrt(pow((?X1-?X2),
+2) + pow((?Y1-?Y2),
+2))).
 
 @{ruleConcernsAirportGeneral} 
 ?N[concernsAirport->?A]
@@ -317,6 +330,9 @@ _greaterOrEquals(?X1, ?X2) AND
 _lessOrEquals(?X1, (?X2 + ?W)) AND
 _greaterOrEquals(?Y1, ?Y2) AND
 _lessOrEquals(?Y1, (?Y2+?H)).
+
+@{ruleImportance} 
+notamImportance(?N, Taxi, High) :- ?N:SNOWTAM.
 
 @{ruleRelevantForAircraftAirportFullClosure} 
 ?N[relevantForAircraft->?A]
@@ -460,6 +476,9 @@ crosses(?P,
 @{query1388503986207} 
 ?- notamImportance(?N:Notam, ?C:CurrentFlightPhase, ?I:Importance).
 
+@{query1388664910828} 
+?- ?N:Notam[relevantForAircraft->UFO].
+
 @{queryRelevantForAircraft} 
 ?- ?N:Notam[relevantForAircraft->?A].
 
@@ -500,4 +519,35 @@ AND ?W[relativeDuration->?DUR]
 AND SNOWTAM1[hasValidTime->?VT, hasApplyTime->?AT]
 AND ?VT[validFrom->?VTF, validTo->?VTT]
 AND ?AT[appliesFrom->?ATF, appliesTo->?ATT].
+
+@{querySpecialBIRDTAM} 
+?- <os:default:emptyquery_>(?X)@_defaultModule.
+
+@{querySpecialAirportClosure} 
+?- ?N:AirportClosure[concernsAirport->?A, relevantForLanding->FlightA1A2]
+AND FlightA1A2[hasRoute->?R, hasCurrentLocation->?LOC]
+AND ?R[flightTo->?A] 
+AND ?AP:Airport[hasPoint->?L]
+AND not _equals(?A, ?AP)
+AND distance(?LOC, ?L, ?Result).
+
+@{querySpecialNavaidUnservicable} 
+?- ?N:NavaidUnservicable[relevantForFlight->FlightA1A2, relevantForLanding->FlightA1A2, not concernsAirport->?NEWDEST] AND
+?N:Notam[concernsAirport->?A] AND
+FlightA1A2[hasRoute->?R, hasCurrentLocation->?CL] AND
+?R:Route[flightTo->?A] AND
+?NEWDEST:Airport[hasPoint->?AD] AND
+distance(?CL, ?AD, ?D) AND
+?D < 20.
+
+@{querySpecialSNOWTAM} 
+?- ?N:SNOWTAM[relevantForLanding->FlightA1A2, relevantForFlight->FlightA1A2]
+AND FlightA1A2[hasRoute->?R, hasAircraft->?AC]
+AND ?R[flightTo->?A]
+AND ?AC[hasAircraftType->?ACT]
+AND ?ACT[wingspan->?WS]
+AND ?AP:Airport AND
+?W:_integer AND ?WS:_integer
+AND ((?NO:Notam[concernsAirport->?AP, aboveWingspanClosed->?W] AND  ?WS < ?W)
+or (?AP:Airport AND ?NO:Notam[not concernsAirport->?AP])).
 

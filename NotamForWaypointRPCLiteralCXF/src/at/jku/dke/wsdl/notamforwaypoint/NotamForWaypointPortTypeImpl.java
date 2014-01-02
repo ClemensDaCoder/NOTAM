@@ -27,7 +27,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
                       serviceName = "Notam_For_Waypoint",
                       portName = "NotamForWaypoint_Port",
                       targetNamespace = "http://dke.jku.at/wsdl/NotamForWaypoint",
-                      wsdlLocation = "file:/D:/workspaces/CEUE/NotamForWaypointRPCLiteralCXF/NotamForWaypoint.wsdl",
+                      wsdlLocation = "file:WebContent/wsdl/NotamForWaypoint.wsdl",
                       endpointInterface = "at.jku.dke.wsdl.notamforwaypoint.NotamForWaypointPortType")
                       
 public class NotamForWaypointPortTypeImpl implements NotamForWaypointPortType {

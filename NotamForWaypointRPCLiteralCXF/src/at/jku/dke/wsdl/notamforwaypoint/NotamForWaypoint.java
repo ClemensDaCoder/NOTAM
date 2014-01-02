@@ -15,7 +15,7 @@ import javax.xml.ws.Service;
  *
  */
 @WebServiceClient(name = "Notam_For_Waypoint", 
-                  wsdlLocation = "file:/D:/workspaces/CEUE/NotamForWaypointRPCLiteralCXF/NotamForWaypoint.wsdl",
+                  wsdlLocation = "file:WebContent/wsdl/NotamForWaypoint.wsdl",
                   targetNamespace = "http://dke.jku.at/wsdl/NotamForWaypoint") 
 public class NotamForWaypoint extends Service {
 
@@ -26,11 +26,11 @@ public class NotamForWaypoint extends Service {
     static {
         URL url = null;
         try {
-            url = new URL("file:/D:/workspaces/CEUE/NotamForWaypointRPCLiteralCXF/NotamForWaypoint.wsdl");
+            url = new URL("file:WebContent/wsdl/NotamForWaypoint.wsdl");
         } catch (MalformedURLException e) {
             java.util.logging.Logger.getLogger(NotamForWaypoint.class.getName())
                 .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "file:/D:/workspaces/CEUE/NotamForWaypointRPCLiteralCXF/NotamForWaypoint.wsdl");
+                     "Can not initialize the default wsdl from {0}", "file:WebContent/wsdl/NotamForWaypoint.wsdl");
         }
         WSDL_LOCATION = url;
     }

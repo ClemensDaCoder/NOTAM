@@ -63,6 +63,18 @@ public class NotamForWaypointTest {
     }
 	
 	@Test
+	public void validTimeEndsTooEarly() {
+		validTo = XMLGregorianCalendarImpl.createDateTime(2013, 11, 5, 9, 0, 0); //2013-11-05 09:00
+		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
+	}
+	
+	@Test
+	public void validTimeStartsTooLate() {
+		validFrom = XMLGregorianCalendarImpl.createDateTime(2013, 11, 5, 12, 0, 0); //2013-11-05 12:00
+		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
+	}
+	
+	@Test
 	public void applyTimeTooLate() {
 		applyFrom = XMLGregorianCalendarImpl.createTime(11, 0, 0, 0); //11:00
 		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
@@ -75,23 +87,30 @@ public class NotamForWaypointTest {
 	}
 	
 	@Test
-	public void wayPointLaterThanValidTo() {
-		duration = dtFactory.newDuration(true, 0, 0, 6, 0, 10, 0); //takes 6 days to reach waypoint
-		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
- 	}
-	
-	@Test 
-	public void flightAndWaypointEarlierThanValidFrom() {
-		flightDeparture = XMLGregorianCalendarImpl.createDateTime(2013, 11, 5, 7, 00, 00); //2013-11-05 7:00
+	public void wayPointLaterThanApplyTo() {
+		duration = dtFactory.newDuration(true, 0, 0, 0, 6, 0, 0); //takes 6 hours to reach waypoint
 		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
 	}
+	
+	@Test
+	public void wayPointLaterThanValidTo() {
+		duration = dtFactory.newDuration(true, 0, 0, 6, 0, 0, 0); //takes 6 days to reach waypoint
+		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
+ 	}
+
 	
 	@Test 
 	public void flightDepartureEarlierThanValidFromWaypointLateEnoughForValidFrom() {
 		flightDeparture = XMLGregorianCalendarImpl.createDateTime(2013, 11, 5, 7, 00, 00); //2013-11-05 7:00
 		duration = dtFactory.newDuration(true, 0, 0, 0, 3, 10, 0); //takes 3 hours and 10 minutes to reach waypoint
 		assertTrue(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
-		
+	}
+	
+	@Test
+	public void flightDepartureEarlierThanValidFromWaypointLateEnoughForValidFromButNotInApplyTime() {
+		flightDeparture = XMLGregorianCalendarImpl.createDateTime(2013, 11, 5, 7, 00, 00); //2013-11-05 7:00
+		duration = dtFactory.newDuration(true, 0, 0, 0, 9, 10, 0); //takes 3 hours and 10 minutes to reach waypoint
+		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));
 	}
 	
 	@Test
@@ -103,7 +122,7 @@ public class NotamForWaypointTest {
 	@Test
 	public void applyFromLaterThanApplyToAndFlightOnValidFromDate() {
 		//applyFrom is later than applyTo
-		applyFrom = XMLGregorianCalendarImpl.createTime(22, 0, 0, 0); //16:00 Z
+		applyFrom = XMLGregorianCalendarImpl.createTime(22, 0, 0, 0); //22:00 Z
 		//flightDeparture on same date as validFrom date
 		flightDeparture = XMLGregorianCalendarImpl.createDateTime(2013, 11, 4, 7, 00, 00); //2013-11-05 7:00
 		assertFalse(object.notamValidForWaypoint(flightDeparture, duration, validFrom, validTo, applyFrom, applyTo));

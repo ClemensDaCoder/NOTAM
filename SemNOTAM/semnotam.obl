@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------
 //
 //  ontology: <http://www.dke.jku.at/semnotam>
-//      date: 2013-12-31 16:41:20
+//      date: 2014-01-03 22:28:00
 //
 //  created with OntoStudio 3.2.0-B353
 // ---------------------------------------------------------------------
@@ -46,11 +46,12 @@ UnspecifiedAircraft::Aircraft.
 
 // Schema -----------------------------------------------
 
+CurrentFlightPhase[name {0:*} *=> _string].
 AircraftType[hasNavAid {0:*} *=> Nav].
 AircraftType[name {1:1} *=> _string].
 AircraftType[wingspan {1:1} *=> _integer].
 Aircraft[hasAircraftType {0:1} *=> AircraftType].
-AirportPartialClosure[aboveWingspanClosed {1:1} *=> integer].
+AirportPartialClosure[aboveWingspanClosed {1:1} *=> _integer].
 AirportPartialClosure[hasClosedRunway {1:*} *=> Runway].
 Airport[hasPoint {1:1} *=> Point].
 Airport[hasRunways {1:*} *=> Runway].
@@ -63,11 +64,13 @@ Area[width {1:1} *=> _integer].
 Feature[describedByNotam {0:*} *=> Notam].
 Flight[arrivalTime {1:1} *=> _dateTime].
 Flight[deptTime {1:1} *=> _dateTime].
-Flight[elapsedTime {1:1} *=> _integer].
+Flight[elapsedTime {1:1} *=> _duration].
 Flight[hasAircraft {1:1} *=> Aircraft].
 Flight[hasCurrentLocation {1:1} *=> Point].
 Flight[hasRoute {1:1} *=> Route].
 Flight[name {1:1} *=> _string].
+Importance[name {1:1} *=> _string].
+Importance[value {1:1} *=> _integer].
 Nav[navAid {1:1} *=> _string].
 NavaidUnservicable[concernsNavequip {1:1} *=> Nav].
 NotamFlight[flightPhase {1:1} *=> CurrentFlightPhase].
@@ -103,52 +106,65 @@ Waypoint[relativeDuration {1:1} *=> _duration].
 
 // Instances --------------------------------------------
 
-A1:Airport.
-A2:Airport.
-A3:Airport.
-A4:Airport.
-A5:Airport.
 AREA1:Area.
 AREA2:Area.
 AirbusA380:AircraftType.
+AirportAmsterdam:Airport.
 AirportFullClosure1:AirportFullClosure.
+AirportMadrid:Airport.
+AirportParis:Airport.
+AirportPartialClosure1:AirportPartialClosure.
+AirportRom:Airport.
+AirportWien:Airport.
+Amsterdam1:Runway.
 Apply10To11:ApplyTime.
 Apply24Hours:ApplyTime.
 Apply5To9:ApplyTime.
 Approach:CurrentFlightPhase.
+Average:Importance.
 BIRDTAM1:BIRDTAM.
-Fligh:CurrentFlightPhase.
-FlightA1A2:Flight.
-FlightA3A5:Flight.
+FlightMadridParis1:Flight.
+FlightMadridWien1:Flight.
+FlightParisAmsterdam1:Flight.
+FlightRomWien1:Flight.
+Fly:CurrentFlightPhase.
 Glider:AircraftType.
 High:Importance.
 Jumbo:Aircraft.
 Landing:CurrentFlightPhase.
+Low:Importance.
+Madrid1:Runway.
+Madrid2:Runway.
 NavidUnservicable1:NavaidUnservicable.
-Notam1:Notam.
-P102:Point.
-P11:Point.
-P146:Point.
-P1511:Point.
-P162:Point.
-P1911:Point.
-P192:Point.
-P204:Point.
-P44:Point.
-P512:Point.
-P51:Point.
-P63:Point.
-P66:Point.
-P78:Point.
+NavidUnservicable2:NavaidUnservicable.
+P10_15:Point.
+P10_21:Point.
+P12_21:Point.
+P12_24:Point.
+P15_17:Point.
+P15_25:Point.
+P20_11:Point.
+P21_22:Point.
+P23_19:Point.
+P24_14:Point.
+P2_10:Point.
+P5_12:Point.
+P5_15:Point.
+P9_18:Point.
+Paris1:Runway.
 PreFlight:CurrentFlightPhase.
-R1:Route.
-R2:Route.
-R3:Route.
+Rom1:Runway.
+RouteMadridParis:Route.
+RouteMadridWien:Route.
+RouteParisAmsterdam:Route.
+RouteRomWien:Route.
 SNOWTAM1:SNOWTAM.
+SNOWTAM2:SNOWTAM.
 Sailplane:Aircraft.
 Takeoff:CurrentFlightPhase.
 Taxi:CurrentFlightPhase.
 UFO:UnspecifiedAircraft.
+ValidAugust2013:ValidTime.
 ValidDecember2013:ValidTime.
 ValidNovember2013:ValidTime.
 W1:Waypoint.
@@ -158,128 +174,183 @@ W4:Waypoint.
 W5:Waypoint.
 W6:Waypoint.
 W7:Waypoint.
+Wien1:Runway.
 navGPS:Nav.
 
 // Properties -------------------------------------------
 
-A1[hasPoint->P512].
-A1[name->"A1"].
-A2[hasPoint->P11].
-A2[name->"A2"].
-A3[hasPoint->P162].
-A3[name->"A3"].
-A4[hasPoint->P1911].
-A4[name->"A4"].
-A5[hasPoint->P204].
-A5[name->"A5"].
-AREA1[hasPoint->P66].
-AREA1[height->3].
-AREA1[width->4].
-AREA2[hasPoint->P51].
-AREA2[height->2].
-AREA2[width->16].
+Taxi[name->"Taxi"].
+Takeoff[name->"Takeoff"].
+PreFlight[name->"PreFlight"].
+Landing[name->"Landing"].
+Fly[name->"Fly"].
+Approach[name->"Approach"].
+NavidUnservicable2[concernsNavequip->navGPS].
+FlightMadridParis1[hasCurrentLocation->P5_15].
+FlightRomWien1[deptTime->"2013-08-23T15:00:00"^^_dateTime].
+FlightRomWien1[arrivalTime->"2013-08-23T17:30:00"^^_dateTime].
+FlightMadridParis1[arrivalTime->"2013-12-30T04:00:00"^^_dateTime].
+FlightMadridParis1[deptTime->"2013-12-30T02:00:00"^^_dateTime].
+FlightMadridParis1[elapsedTime->"P0Y0M0DT0H55M0S"^^_duration].
+AREA1[hasPoint->P2_10].
+AREA1[height->8].
+AREA1[width->8].
+AREA2[hasPoint->P10_21].
+AREA2[height->9].
+AREA2[width->20].
 AirbusA380[hasNavAid->navGPS].
 AirbusA380[name->"AirbusA380"].
 AirbusA380[wingspan->80].
-AirportFullClosure1[concernsAirport->A3].
+AirportAmsterdam[hasPoint->P15_25].
+AirportAmsterdam[hasRunways->Amsterdam1].
+AirportAmsterdam[name->"Amsterdam"].
+AirportFullClosure1[concernsAirport->AirportAmsterdam].
 AirportFullClosure1[hasApplyTime->Apply5To9].
 AirportFullClosure1[hasValidTime->ValidDecember2013].
 AirportFullClosure1[name->"AirportFullClosure1"].
+AirportMadrid[hasPoint->P5_12].
+AirportMadrid[hasRunways->Madrid1].
+AirportMadrid[hasRunways->Madrid2].
+AirportMadrid[name->"Madrid"].
+AirportParis[hasPoint->P12_21].
+AirportParis[hasRunways->Paris1].
+AirportParis[name->"Paris"].
+AirportPartialClosure1[aboveWingspanClosed->0].
+AirportPartialClosure1[concernsAirport->AirportMadrid].
+AirportPartialClosure1[hasApplyTime->Apply10To11].
+AirportPartialClosure1[hasClosedRunway->Madrid2].
+AirportPartialClosure1[hasValidTime->ValidDecember2013].
+AirportPartialClosure1[name->"AirportPartialClosure"].
+AirportRom[hasPoint->P20_11].
+AirportRom[hasRunways->Rom1].
+AirportRom[name->"Rom"].
+AirportWien[hasPoint->P23_19].
+AirportWien[hasRunways->Wien1].
+AirportWien[name->"Wien"].
 Apply10To11[appliesFrom->"10:00:00"^^_time].
 Apply10To11[appliesTo->"11:00:00"^^_time].
 Apply24Hours[appliesFrom->"00:00:00"^^_time].
 Apply24Hours[appliesTo->"23:59:59"^^_time].
 Apply5To9[appliesFrom->"05:00:00"^^_time].
 Apply5To9[appliesTo->"09:00:00"^^_time].
+Average[name->"Average"].
+Average[value->2].
 BIRDTAM1[concernsAirspace->AREA2].
-BIRDTAM1[hasApplyTime->Apply10To11].
-BIRDTAM1[hasValidTime->ValidDecember2013].
+BIRDTAM1[hasApplyTime->Apply24Hours].
+BIRDTAM1[hasValidTime->ValidNovember2013].
 BIRDTAM1[name->"BIRDTAM1"].
-FlightA1A2[arrivalTime->"2013-12-30T02:00:00"^^_dateTime].
-FlightA1A2[deptTime->"2013-12-30T02:01:00"^^_dateTime].
-FlightA1A2[hasAircraft->Jumbo].
-FlightA1A2[hasRoute->R1].
-FlightA1A2[name->"FlightA1A2"].
-FlightA3A5[arrivalTime->"2013-12-30T07:00:00"^^_dateTime].
-FlightA3A5[deptTime->"2013-12-30T06:00:00"^^_dateTime].
-FlightA3A5[hasAircraft->Sailplane].
-FlightA3A5[hasRoute->R3].
-FlightA3A5[name->"FlightA3A5"].
+FlightMadridParis1[hasAircraft->Jumbo].
+FlightMadridParis1[hasRoute->RouteMadridParis].
+FlightMadridParis1[name->"Madrid-Paris"].
+FlightMadridWien1[arrivalTime->"2013-11-30T10:00:00"^^_dateTime].
+FlightMadridWien1[deptTime->"2013-11-30T07:00:00"^^_dateTime].
+FlightMadridWien1[hasAircraft->Sailplane].
+FlightMadridWien1[hasRoute->RouteMadridWien].
+FlightMadridWien1[name->"Madrid-Wien"].
+FlightParisAmsterdam1[arrivalTime->"2013-12-30T07:00:00"^^_dateTime].
+FlightParisAmsterdam1[deptTime->"2013-12-30T06:00:00"^^_dateTime].
+FlightParisAmsterdam1[hasAircraft->Jumbo].
+FlightParisAmsterdam1[hasCurrentLocation->P12_24].
+FlightParisAmsterdam1[hasRoute->RouteParisAmsterdam].
+FlightParisAmsterdam1[name->"Paris-Amsterdam"].
+FlightRomWien1[hasAircraft->UFO].
+FlightRomWien1[hasCurrentLocation->P24_14].
+FlightRomWien1[hasRoute->RouteRomWien].
+FlightRomWien1[name->"Rom-Wien"].
 Glider[name->"Glider"].
 Glider[wingspan->12].
+High[name->"High"].
+High[value->3].
 Jumbo[hasAircraftType->AirbusA380].
+Low[name->"Low"].
+Low[value->1].
 NavidUnservicable1[concernsAirspace->AREA1].
 NavidUnservicable1[concernsNavequip->navGPS].
-NavidUnservicable1[hasApplyTime->Apply10To11].
+NavidUnservicable1[hasApplyTime->Apply24Hours].
 NavidUnservicable1[hasValidTime->ValidDecember2013].
 NavidUnservicable1[name->"NavidUnservicable1"].
-Notam1[concernsAirspace->AREA2].
-Notam1[name->"Notam1"].
-P102[hasX->10].
-P102[hasY->2].
-P11[hasX->1].
-P11[hasY->1].
-P146[hasX->14].
-P146[hasY->6].
-P1511[hasX->15].
-P1511[hasY->11].
-P162[hasX->16].
-P162[hasY->2].
-P1911[hasX->19].
-P1911[hasY->11].
-P192[hasX->19].
-P192[hasY->2].
-P204[hasX->20].
-P204[hasY->4].
-P44[hasX->4].
-P44[hasY->4].
-P512[hasX->5].
-P512[hasY->12].
-P51[hasX->5].
-P51[hasY->1].
-P63[hasX->6].
-P63[hasY->3].
-P66[hasX->6].
-P66[hasY->6].
-P78[hasX->7].
-P78[hasY->8].
-R1[flightFrom->A1].
-R1[flightTo->A2].
-R1[hasWaypoint->W1].
-R1[hasWaypoint->W2].
-R2[flightFrom->A2].
-R2[flightTo->A4].
-R2[hasWaypoint->W3].
-R2[hasWaypoint->W4].
-R2[hasWaypoint->W5].
-R2[hasWaypoint->W6].
-R3[flightFrom->A3].
-R3[flightTo->A5].
-R3[hasWaypoint->W7].
+NavidUnservicable2[concernsAirport->AirportWien].
+NavidUnservicable2[hasApplyTime->Apply24Hours].
+NavidUnservicable2[hasValidTime->ValidAugust2013].
+NavidUnservicable2[name->"Navaidunservicable2"].
+P10_15[hasX->10].
+P10_15[hasY->15].
+P10_21[hasX->10].
+P10_21[hasY->21].
+P12_21[hasX->12].
+P12_21[hasY->21].
+P12_24[hasX->12].
+P12_24[hasY->24].
+P15_25[hasX->15].
+P15_25[hasY->25].
+P20_11[hasX->20].
+P20_11[hasY->11].
+P21_22[hasX->21].
+P21_22[hasY->22].
+P23_19[hasX->23].
+P23_19[hasY->19].
+P24_14[hasX->24].
+P24_14[hasY->14].
+P2_10[hasX->2].
+P2_10[hasY->10].
+P5_12[hasX->5].
+P5_12[hasY->12].
+P5_15[hasX->5].
+P5_15[hasY->15].
+P9_18[hasX->9].
+P9_18[hasY->18].
+RouteMadridParis[flightFrom->AirportMadrid].
+RouteMadridParis[flightTo->AirportParis].
+RouteMadridParis[hasWaypoint->W1].
+RouteMadridParis[hasWaypoint->W2].
+RouteMadridWien[flightFrom->AirportMadrid].
+RouteMadridWien[flightTo->AirportWien].
+RouteMadridWien[hasWaypoint->W5].
+RouteMadridWien[hasWaypoint->W6].
+RouteMadridWien[hasWaypoint->W7].
+RouteParisAmsterdam[flightFrom->AirportParis].
+RouteParisAmsterdam[flightTo->AirportAmsterdam].
+RouteParisAmsterdam[hasWaypoint->W3].
+RouteRomWien[flightFrom->AirportRom].
+RouteRomWien[flightTo->AirportWien].
+RouteRomWien[hasWaypoint->W4].
 SNOWTAM1[aboveWingspanClosed->20].
+SNOWTAM1[concernsAirport->AirportMadrid].
 SNOWTAM1[concernsAirspace->AREA1].
-SNOWTAM1[hasApplyTime->Apply24Hours].
+SNOWTAM1[hasApplyTime->Apply5To9].
 SNOWTAM1[hasValidTime->ValidDecember2013].
 SNOWTAM1[name->"SNOWTAM1"].
+SNOWTAM2[aboveWingspanClosed->5].
+SNOWTAM2[concernsAirport->AirportWien].
+SNOWTAM2[hasApplyTime->Apply24Hours].
+SNOWTAM2[hasValidTime->ValidNovember2013].
+SNOWTAM2[name->"SNOWTAM2"].
 Sailplane[hasAircraftType->Glider].
+ValidAugust2013[validFrom->"2013-08-01T00:00:00"^^_dateTime].
+ValidAugust2013[validTo->"2013-08-31T23:59:59"^^_dateTime].
 ValidDecember2013[validFrom->"2013-12-01T00:00:00"^^_dateTime].
 ValidDecember2013[validTo->"2013-12-31T23:59:59"^^_dateTime].
 ValidNovember2013[validFrom->"2013-11-01T00:00:00"^^_dateTime].
 ValidNovember2013[validTo->"2013-11-30T23:59:59"^^_dateTime].
-W1[hasPoint->P44].
-W1[relativeDuration->"P0Y0M0DT0H0M20S"^^_duration].
-W2[hasPoint->P78].
-W2[relativeDuration->"P0Y0M0DT0H0M40S"^^_duration].
-W3[hasPoint->P63].
-W4[hasPoint->P102].
-W5[hasPoint->P146].
-W6[hasPoint->P1511].
-W7[hasPoint->P192].
-W7[relativeDuration->"P0Y0M0DT0H30M0S"^^_duration].
+W1[hasPoint->P5_15].
+W1[relativeDuration->"P0Y0M0DT0H45M0S"^^_duration].
+W2[hasPoint->P9_18].
+W2[relativeDuration->"P0Y0M0DT1H30M0S"^^_duration].
+W3[hasPoint->P12_24].
+W3[relativeDuration->"P0Y0M0DT0H30M0S"^^_duration].
+W4[hasPoint->P24_14].
+W4[relativeDuration->"P0Y0M0DT0H45M0S"^^_duration].
+W5[hasPoint->P10_15].
+W5[relativeDuration->"P0Y0M0DT0H45M0S"^^_duration].
+W6[hasPoint->P15_17].
+W6[relativeDuration->"P0Y0M0DT1H30M0S"^^_duration].
+W7[hasPoint->P21_22].
+W7[relativeDuration->"P0Y0M0DT2H15M0S"^^_duration].
 navGPS[navAid->"GPS"].
 
 // Misc. Facts ------------------------------------------
 
+distance(Point,Point,_int).
 crosses(Point,Area).
 _rulecategory(ruleRelevantForFlightFlightRoute,_path("Rules")).
 _rulecategory(ruleRelevantForFlightLandingTakeoff,_path("Rules")).
@@ -290,8 +361,18 @@ notamImportance(Notam,CurrentFlightPhase,Importance).
 
 // Rules ------------------------------------------------
 
-@{ruleImportance} 
-notamImportance(?N, Taxi, High) :- ?N:SNOWTAM.
+@{ruleCalculateDistance} 
+distance(?P1,
+?P2,
+?D)
+:-
+?P1:Point[hasX->?X1,
+hasY->?Y1] AND
+?P2:Point[hasX->?X2,
+hasY->?Y2] AND
+?D is (sqrt(pow((?X1-?X2),
+2) + pow((?Y1-?Y2),
+2))).
 
 @{ruleConcernsAirportGeneral} 
 ?N[concernsAirport->?A]
@@ -317,6 +398,78 @@ _greaterOrEquals(?X1, ?X2) AND
 _lessOrEquals(?X1, (?X2 + ?W)) AND
 _greaterOrEquals(?Y1, ?Y2) AND
 _lessOrEquals(?Y1, (?Y2+?H)).
+
+@{ruleImportanc21} 
+notamImportance(?N, Approach, High) :- ?N:NavaidUnservicable.
+
+@{ruleImportance10} 
+notamImportance(?N, Fly, High) :- ?N:BIRDTAM.
+
+@{ruleImportance11} 
+notamImportance(?N, PreFlight, Average) :- ?N:BIRDTAM.
+
+@{ruleImportance12} 
+notamImportance(?N, Takeoff, Low) :- ?N:BIRDTAM.
+
+@{ruleImportance13} 
+notamImportance(?N, Taxi, Low) :- ?N:SNOWTAM.
+
+@{ruleImportance14} 
+notamImportance(?N, Landing, High) :- ?N:SNOWTAM.
+
+@{ruleImportance15} 
+notamImportance(?N, Approach, High) :- ?N:SNOWTAM.
+
+@{ruleImportance16} 
+notamImportance(?N, Fly, Average) :- ?N:SNOWTAN.
+
+@{ruleImportance17} 
+notamImportance(?N, PreFlight, High) :- ?N:SNOWTAM.
+
+@{ruleImportance18} 
+notamImportance(?N, Takeoff, Low) :- ?N:SNOWTAM.
+
+@{ruleImportance19} 
+notamImportance(?N, Taxi, Low) :- ?N:NavaidUnservicable.
+
+@{ruleImportance1} 
+notamImportance(?N, Taxi, Low) :- ?N:AirportClosure.
+
+@{ruleImportance20} 
+notamImportance(?N, Landing, High) :- ?N:NavaidUnservicable.
+
+@{ruleImportance22} 
+notamImportance(?N, Fly, Average) :- ?N:NavaidUnservicable.
+
+@{ruleImportance23} 
+notamImportance(?N, PreFlight, High) :- ?N:NavaidUnservicable.
+
+@{ruleImportance24} 
+notamImportance(?N, Takeoff, Low) :- ?N:NavaidUnservicable.
+
+@{ruleImportance2} 
+notamImportance(?N, Landing, High) :- ?N:AirportClosure.
+
+@{ruleImportance3} 
+notamImportance(?N, Approach, Low) :- ?N:AirportClosure.
+
+@{ruleImportance4} 
+notamImportance(?N, Fly, Average) :- ?N:AirportClosure.
+
+@{ruleImportance5} 
+notamImportance(?N, PreFlight, Average) :- ?N:AirportClosure.
+
+@{ruleImportance6} 
+notamImportance(?N, Takeoff, Average) :- ?N:AirportClosure.
+
+@{ruleImportance7} 
+notamImportance(?N, Taxi, Low) :- ?N:BIRDTAM.
+
+@{ruleImportance8} 
+notamImportance(?N, Landing, Low) :- ?N:BIRDTAM.
+
+@{ruleImportance9} 
+notamImportance(?N, Approach, Low) :- ?N:BIRDTAM.
 
 @{ruleRelevantForAircraftAirportFullClosure} 
 ?N[relevantForAircraft->?A]
@@ -457,9 +610,6 @@ crosses(?P,
 
 // Queries ----------------------------------------------
 
-@{query1388503986207} 
-?- notamImportance(?N:Notam, ?C:CurrentFlightPhase, ?I:Importance).
-
 @{queryRelevantForAircraft} 
 ?- ?N:Notam[relevantForAircraft->?A].
 
@@ -470,7 +620,7 @@ crosses(?P,
 ?- ?N:Notam[relevantForFlightRoute->?FR].
 
 @{queryRelevantForFlight} 
-?- ?N:Notam[relevantForFlight->?F].
+?- ?N:Notam[relevantForFlight->FlightMadridWien1].
 
 @{queryRelevantForLanding} 
 ?- ?N:Notam[relevantForLanding->?F].
@@ -494,10 +644,172 @@ _port->"NotamForWaypoint_Port"],
 "notamValidTo"->?VTT,
 "notamApplyFrom"->?ATF,
 "notamApplyTo"->?ATT],?Result)
-AND FlightA1A2[deptTime->?DT, hasRoute->?R]
+AND FlightMadridParis1[deptTime->?DT, hasRoute->?R]
 AND ?R[hasWaypoint->?W]
 AND ?W[relativeDuration->?DUR]
 AND SNOWTAM1[hasValidTime->?VT, hasApplyTime->?AT]
 AND ?VT[validFrom->?VTF, validTo->?VTT]
 AND ?AT[appliesFrom->?ATF, appliesTo->?ATT].
+
+@{queryGeneralDistanceUntilNotam, options[outorder(?FLIGHTNAME,?WAYPOINT,?DISTANCE)]} 
+?-
+?F = FlightMadridParis1 AND
+?N:Notam[relevantForFlight->?F,
+relevantForWaypoint->?WAYPOINT] 
+AND
+?F[hasRoute->?R,
+hasCurrentLocation->?CL,
+name->?FLIGHTNAME] AND
+?R[hasWaypoint->?WAYPOINT] AND
+?WAYPOINT[hasPoint->?P]
+AND
+distance(?CL,
+?P,
+?DISTANCE).
+
+@{queryGeneralDistanceUntilNotamAirport, options[outorder(?FLIGHTNAME,?AIRPORT,?DISTANCE)]} 
+?-
+?F = FlightParisAmsterdam1 AND
+?N:Notam[relevantForFlight->?F,
+concernsAirport->?A] 
+AND
+?F[hasRoute->?R,
+hasCurrentLocation->?CL,
+name->?FLIGHTNAME] AND
+?R[flightTo->?A] AND
+?A[hasPoint->?P,
+name->?AIRPORT]
+AND
+distance(?CL,
+?P,
+?DISTANCE).
+
+@{queryGeneralNotamImportance, options[sort(desc(?IMP)),outorder(?FLIGHTNAME,?NOTAM,?PHASE,?IMPORTANCE)]} 
+?-
+?F:Flight[name->?FLIGHTNAME] AND
+?N:Notam[relevantForFlight->?F,
+name->?NOTAM] AND
+?FF:CurrentFlightPhase[name->?PHASE] AND
+notamImportance(?N,
+?FF,
+?I) AND
+?I[name->?IMPORTANCE,
+value->?IMP].
+
+@{queryGeneralNotamsForFlight, options[outorder(?FLIGHTNAME,?NOTAM,?PHASE,?IMPORTANCE)]} 
+?-
+?F = FlightMadridWien1 AND
+?FF = Fly AND
+?N:Notam[relevantForFlight->?F,
+name->?NOTAM] AND
+notamImportance(?N,
+?FF,
+?I) AND
+?I[name->?IMPORTANCE,
+value->?IMP] AND
+_greaterOrEquals(?IMP,
+2)
+AND
+?FF[name->?PHASE] AND
+?F[name->?FLIGHTNAME].
+
+@{queryGeneralTimeUntilNotam, options[sort(?DIFFERENCE),outorder(?FLIGHTNAME,?NOTAM,?DIFFERENCE)]} 
+?-
+?F = FlightMadridParis1 AND
+?F[hasRoute->?R,
+elapsedTime->?ET,
+name->?FLIGHTNAME] AND
+?R[hasWaypoint->?WP] AND
+?N:Notam[relevantForFlight->?F,
+relevantForWaypoint->?WP,
+name->?NOTAM] AND
+?WP[relativeDuration->?RD] AND
+?RD > ?ET AND
+_negate(?ET,
+?NET) AND
+_add(?RD,
+?NET,
+?DIFFERENCE).
+
+@{queryGeneralTimeUntilNotamAirport} 
+?-FlightMadridParis1[deptTime->?DEPT,
+arrivalTime->?ARR,
+hasRoute->?R,
+elapsedTime->?DUR] AND
+_add(?DEPT,
+?DUR,
+?RESULT).
+
+@{queryNotamFlight, options[sort(?IMP),outorder(?FLIGHTNAME,?NOTAM,?PHASE,?IMPORTANCE)]} 
+?-
+?FF = Fly AND
+?F=FlightMadridWien1 AND
+?N:Notam[relevantForFlight->?F,
+name->?NOTAM] AND
+notamImportance(?N,
+?FF,
+?I) AND
+?F[name->?FLIGHTNAME] AND
+?FF[name->?PHASE]
+AND
+?I:Importance[value->?IMP,
+name->?IMPORTANCE].
+
+@{querySpecialAirportClosure, options[sort(?DISTANCE),outorder(?FLIGHTNAME,?OLDDESTINATION,?NOTAM,?NEWDESTINATION,?DISTANCE)]} 
+?-
+?F=FlightParisAmsterdam1 AND
+?N:AirportClosure[concernsAirport->?A,
+relevantForLanding->?F,
+not concernsAirport->?AP,
+name->?NOTAM] AND
+?A[name->?OLDDESTINATION]
+AND
+?F[hasRoute->?R,
+hasCurrentLocation->?LOC,
+name->?FLIGHTNAME]
+AND
+?R[flightTo->?A] 
+AND
+?AP:Airport[hasPoint->?L,
+name->?NEWDESTINATION]
+AND
+distance(?LOC,
+?L,
+?DISTANCE).
+
+@{querySpecialBIRDTAM, options[sort(desc(?IMP)),outorder(?BIRDTAM,?PHASE,?IMPORTANCE)]} 
+?-
+?N:BIRDTAM[name->?BIRDTAM] AND
+?I[value->?IMP,
+name->?IMPORTANCE] AND
+notamImportance(?N,
+?FF,
+?I) AND
+?FF[name->?PHASE].
+
+@{querySpecialNavaidUnservicable, options[outorder(?FLIGHTNAME,?NOTAM,?NEWDESTINATION,?DISTANCE)]} 
+?-
+?F = FlightRomWien1 AND
+?N:NavaidUnservicable[relevantForFlight->?F,
+relevantForLanding->?F,
+not concernsAirport->?NEWDEST, name->?NOTAM] AND
+?F[hasRoute->?R,
+hasCurrentLocation->?CL, name->?FLIGHTNAME] AND
+?NEWDEST:Airport[hasPoint->?AD, name->?NEWDESTINATION] AND
+distance(?CL,
+?AD,
+?DISTANCE)
+AND
+?DISTANCE < 15.
+
+@{querySpecialSNOWTAM, options[outorder(?F,?A,?NEWDEST)]} 
+?-
+?F = FlightMadridWien1 AND
+?N:SNOWTAM[relevantForFlight->?F,
+relevantForLanding->?F,
+not concernsAirport->?NEWDEST] AND
+?F[hasAircraft->?A] AND
+?NEWDEST:Airport AND
+?NO:Notam[not relevantForAirport->?NEWDEST AND
+not relevantForAircraft->?A].
 

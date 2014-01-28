@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------
 //
 //  ontology: <http://www.dke.jku.at/semnotam>
-//      date: 2014-01-10 09:13:04
+//      date: 2014-01-23 14:56:33
 //
 //  created with OntoStudio 3.2.0-B353
 // ---------------------------------------------------------------------
@@ -123,8 +123,8 @@ Landing:CurrentFlightPhase.
 Low:Importance.
 Madrid1:Runway.
 Madrid2:Runway.
-NavidUnservicable1:NavaidUnservicable.
-NavidUnservicable2:NavaidUnservicable.
+NavaidUnservicable1:NavaidUnservicable.
+NavaidUnservicable2:NavaidUnservicable.
 P10_15:Point.
 P10_21:Point.
 P12_21:Point.
@@ -249,16 +249,16 @@ Jumbo[hasAircraftType->AirbusA380].
 Landing[name->"Landing"].
 Low[name->"Low"].
 Low[value->1].
-NavidUnservicable1[concernsAirspace->AREA1].
-NavidUnservicable1[concernsNavequip->navGPS].
-NavidUnservicable1[hasApplyTime->Apply24Hours].
-NavidUnservicable1[hasValidTime->ValidDecember2013].
-NavidUnservicable1[name->"NavidUnservicable1"].
-NavidUnservicable2[concernsAirport->AirportWien].
-NavidUnservicable2[concernsNavequip->navGPS].
-NavidUnservicable2[hasApplyTime->Apply24Hours].
-NavidUnservicable2[hasValidTime->ValidAugust2013].
-NavidUnservicable2[name->"Navaidunservicable2"].
+NavaidUnservicable1[concernsAirspace->AREA1].
+NavaidUnservicable1[concernsNavequip->navGPS].
+NavaidUnservicable1[hasApplyTime->Apply24Hours].
+NavaidUnservicable1[hasValidTime->ValidDecember2013].
+NavaidUnservicable1[name->"NavidUnservicable1"].
+NavaidUnservicable2[concernsAirport->AirportWien].
+NavaidUnservicable2[concernsNavequip->navGPS].
+NavaidUnservicable2[hasApplyTime->Apply24Hours].
+NavaidUnservicable2[hasValidTime->ValidAugust2013].
+NavaidUnservicable2[name->"Navaidunservicable2"].
 P10_15[hasX->10].
 P10_15[hasY->15].
 P10_21[hasX->10].
@@ -342,11 +342,6 @@ navGPS[navAid->"GPS"].
 
 distance(Point,Point,_int).
 crosses(Point,Area).
-_rulecategory(ruleRelevantForFlightFlightRoute,_path("Rules")).
-_rulecategory(ruleRelevantForFlightLandingTakeoff,_path("Rules")).
-_rulecategory(ruleRelevantForFlightRoute,_path("Rules")).
-_rulecategory(ruleRelevantForLanding,_path("Rules")).
-_rulecategory(ruleRelevantForTakeoff,_path("Rules")).
 notamImportance(Notam,CurrentFlightPhase,Importance).
 
 // Rules ------------------------------------------------
@@ -695,6 +690,12 @@ _add(?TIMENOW,
 ?INDURATION,
 ?ARRTIME).
 
+@{queryMetaReasoning2, options[outorder(?Notam,?RelevantForAttribute,?Aircraft)]} 
+?- ?Notam:Notam[?RelevantForAttribute->FlightRomWien1, ?RelevantAircraft->?Aircraft] AND FlightRomWien1[hasAircraft->?Aircraft].
+
+@{queryMetaReasoning} 
+?- ?N:Notam[?F->FlightMadridParis1].
+
 @{queryNotamFlight, options[sort(?IMP),outorder(?FLIGHTNAME,?NOTAM,?PHASE,?IMPORTANCE)]} 
 ?-
 ?FF = Fly AND
@@ -753,6 +754,18 @@ distance(?LOC,
 ?NEWLOC,
 ?DISTANCE).
 
+@{querySpecialBIRDTAM, options[sort(desc(?IMPVAL)),outorder(?FLIGHTNAME,?BIRDTAM,?PHASE,?IMPORTANCE)]} 
+?-
+?FLIGHT=FlightMadridWien1 AND
+?NOTAM:BIRDTAM[relevantForFlight->?FLIGHT, name->?BIRDTAM] AND
+?FLIGHT[name->?FLIGHTNAME] AND
+?IMP[value->?IMPVAL,
+name->?IMPORTANCE] AND
+notamImportance(?NOTAM,
+?FLIGHTPHASE,
+?IMP) AND
+?FLIGHTPHASE[name->?PHASE].
+
 @{querySpecialNavaidUnservicable, options[outorder(?FLIGHTNAME,?NOTAMNAME,?NEWDESTINATION,?DISTANCE)]} 
 ?-
 ?FLIGHT = FlightRomWien1 AND
@@ -782,35 +795,6 @@ name->?FLIGHTNAME] AND
 ?NOTAM2:Notam[not relevantForAirport->?NEWDEST AND
 not relevantForAircraft->?AIRCRAFT].
 
-@{queryTestWebservice} 
-?-
-_memberByPath(?Result,_path("notamValid"), ?V) AND
-_webserviceAccess([_wsdl->"http://localhost:8080/NotamForWaypoint/services/NotamForWaypoint_Port?wsdl",
-_service->"NotamForWaypoint_PortType",
-_method->"notamValidForWaypoint",
-_port->"NotamForWaypoint_Port"],
-["flightDepartureTime"->?DT,
-"waypointRelativeDuration"->?DUR,
-"notamValidFrom"->?VTF,
-"notamValidTo"->?VTT,
-"notamApplyFrom"->?ATF,
-"notamApplyTo"->?ATT],?Result)
-AND FlightMadridParis1[deptTime->?DT, hasRoute->?R]
-AND ?R[hasWaypoint->?W]
-AND ?W[relativeDuration->?DUR]
-AND SNOWTAM1[hasValidTime->?VT, hasApplyTime->?AT]
-AND ?VT[validFrom->?VTF, validTo->?VTT]
-AND ?AT[appliesFrom->?ATF, appliesTo->?ATT].
-
-@{querySpecialBIRDTAM, options[sort(desc(?IMPVAL)),outorder(?FLIGHTNAME,?BIRDTAM,?PHASE,?IMPORTANCE)]} 
-?-
-?FLIGHT=FlightMadridWien1 AND
-?NOTAM:BIRDTAM[relevantForFlight->?FLIGHT, name->?BIRDTAM] AND
-?FLIGHT[name->?FLIGHTNAME] AND
-?IMP[value->?IMPVAL,
-name->?IMPORTANCE] AND
-notamImportance(?NOTAM,
-?FLIGHTPHASE,
-?IMP) AND
-?FLIGHTPHASE[name->?PHASE].
+@{queryWebserviceInfo} 
+?- _webserviceInfo([_wsdl->"http://localhost:8080/NotamForWaypointRPCLiteralCXF/services/NotamForWaypoint_Port?wsdl", _service->"Notam_For_Waypoint", _method->"notamValidForWaypoint", _port->"8080"], ?PORTTYPE, ?METHOD, ?PARAMETER).
 
